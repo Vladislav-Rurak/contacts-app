@@ -1,18 +1,23 @@
+import { connect } from 'react-redux';
+import { createContacts } from '../../actions/actionsCreator';
 import { CONTACT_VALIDATION_SCHEMA } from '../../utils/validationSchemas';
 
 const { Formik, Form, Field, ErrorMessage } = require('formik');
 
-const initialValues = {
-  name: '',
-  telNumber: '',
-  birthday: '',
-};
+function ContactForm (props) {
+  const { create } = props;
 
-const handleSubmit = (values, formikBak) => {
-  formikBak.resetForm();
-};
+  const initialValues = {
+    name: '',
+    telNumber: '',
+    birthday: '',
+  };
 
-function ContactForm () {
+  const handleSubmit = (values, formikBak) => {
+    create(values);
+    formikBak.resetForm();
+  };
+
   return (
     <Formik
       initialValues={initialValues}
@@ -37,4 +42,10 @@ function ContactForm () {
   );
 }
 
-export default ContactForm;
+const mapDispatchToProps = dispatch => ({
+  create: values => {
+    dispatch(createContacts(values));
+  },
+});
+
+export default connect(null, mapDispatchToProps)(ContactForm);
